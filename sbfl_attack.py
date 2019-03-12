@@ -1,6 +1,6 @@
-from cleverhans.attacks import FastGradientMethod
-from cleverhans.utils_keras import KerasModelWrapper
-from cleverhans.attacks import SaliencyMapMethod
+#from cleverhans.attacks import FastGradientMethod
+#from cleverhans.utils_keras import KerasModelWrapper
+#from cleverhans.attacks import SaliencyMapMethod
 
 import numpy as np
 from utils import *
@@ -11,38 +11,38 @@ def sbfl_attack(model, x, ranked_indices, di, adv_x=None, out_file=None):
 
   ## to pick up one adversarial example
   x_1=x.copy()
-  wrap = KerasModelWrapper(model)
-  sess =  backend.get_session()
-  fgsm = FastGradientMethod(wrap, sess=sess)
-  ## to detect the min eps
-  adv_flag=False
+  #wrap = KerasModelWrapper(model)
+  #sess =  backend.get_session()
+  #fgsm = FastGradientMethod(wrap, sess=sess)
+  ### to detect the min eps
+  #adv_flag=False
   #for eps in np.arange(0.01, 0.3, 0.01):
   for eps in np.arange(0.003, 0.3, 0.003):
-    fgsm_params = {'eps': eps,
-                   'clip_min': 0.,
-                   'clip_max': 1.}
-    if adv_x is None:
-      x_1b=fgsm.generate_np(np.array([x_1]), **fgsm_params)
-    else:
-      x_1b=np.array([adv_x])
-    y_1b=np.argsort(model.predict(x_1b))[0][-1:]
-    if y_1b[0]!=y[0]:
-      ####
-      if adv_x is None:
-        if sp[2]==1:
-          eps+=0.1
-        else: eps+=0.3
-        fgsm_params = {'eps': eps,
-                     'clip_min': 0.,
-                     'clip_max': 1.}
-        x_1b=fgsm.generate_np(np.array([x_1]), **fgsm_params)
-        y_1b=np.argsort(model.predict(x_1b))[0][-1:]
-        if y_1b[0]==y[0]: return
-      ####
-      adv_flag=True
-      print ('found adversarial example with eps =', eps)
-      c_diffs=(np.count_nonzero(np.array([x])-x_1b))
-      ## OK - got the adversarial example
+    #fgsm_params = {'eps': eps,
+    #               'clip_min': 0.,
+    #               'clip_max': 1.}
+    #if adv_x is None:
+    #  x_1b=fgsm.generate_np(np.array([x_1]), **fgsm_params)
+    #else:
+    #  x_1b=np.array([adv_x])
+    #y_1b=np.argsort(model.predict(x_1b))[0][-1:]
+    #if y_1b[0]!=y[0]:
+    #  ####
+    #  if adv_x is None:
+    #    if sp[2]==1:
+    #      eps+=0.1
+    #    else: eps+=0.3
+    #    fgsm_params = {'eps': eps,
+    #                 'clip_min': 0.,
+    #                 'clip_max': 1.}
+    #    x_1b=fgsm.generate_np(np.array([x_1]), **fgsm_params)
+    #    y_1b=np.argsort(model.predict(x_1b))[0][-1:]
+    #    if y_1b[0]==y[0]: return
+    #  ####
+    #  adv_flag=True
+    #  print ('found adversarial example with eps =', eps)
+      c_diffs=-1 #(np.count_nonzero(np.array([x])-x_1b))
+    #  ## OK - got the adversarial example
       if sp[2]==1:
         v=np.random.uniform(0,1)
         x_2=x_1.copy()
@@ -155,8 +155,8 @@ def sbfl_attack(model, x, ranked_indices, di, adv_x=None, out_file=None):
       
       break
 
-  if not adv_flag: 
-    return
+  #if not adv_flag: 
+  #  return
 
   p_count=0
   im=np.ones(sp)
