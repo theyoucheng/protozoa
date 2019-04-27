@@ -1,7 +1,6 @@
 # sbte
 
-conda install keras
-
-conda install opencv
-
-conda install pillow
+##To start
+```
+python ./src/sbfl.py --mobilenet-model --inputs data/ --outputs outs
+```
