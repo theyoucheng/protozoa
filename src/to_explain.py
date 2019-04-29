@@ -7,7 +7,6 @@ from mask import *
 
 def to_explain(eobj):
   print ('to explain...')
-  print (eobj.top_classes, eobj.inception_v3, eobj.text_only)
   model=eobj.model
   ## to create output DI
   di=eobj.outputs
