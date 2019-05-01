@@ -1,8 +1,9 @@
 import numpy as np
 from utils import *
 
-def spectra_sym_gen(eobj, x, y, adv_value=1, testgen_factor=0.01, testgen_size=0):
+def spectra_sym_gen(eobj, x, y, adv_value=1, testgen_factor=.2, testgen_size=0):
 
+  
   v_type=type(adv_value)
   model=eobj.model
   failing=[]
@@ -11,13 +12,23 @@ def spectra_sym_gen(eobj, x, y, adv_value=1, testgen_factor=0.01, testgen_size=0
   #inputs=[]
   sp=x.shape
   x_flag=np.zeros(sp, dtype=bool)
-  portion=int(x.size*testgen_factor)
+  portion=int(sp[0]*testgen_factor)
+  incr=1/6*portion
+  if portion<1: portion=1
+  L0=np.array(np.arange(x.size))
+  L0=np.reshape(L0, sp)
   
   while (not np.all(x_flag)) or len(passing)+len(failing)<testgen_size:
     #print ('####', len(passing), len(failing))
     t=x.copy()
-    L0=np.random.choice(x.size, x.size)
-    L=L0[0:portion]
+
+    i0=np.random.randint(0,sp[0])
+    i1=np.random.randint(0,sp[1])
+
+    h=portion 
+    region=L0[ np.max([i0-h,0]) : np.min([i0+h, sp[0]]), np.max([i1-h,0]):np.min([i1+h,sp[1]])].flatten()
+
+    L=region #L0[0:portion]
     if v_type==np.ndarray:
       np.put(t, L, adv_value.take(L))
     else:
@@ -29,18 +40,30 @@ def spectra_sym_gen(eobj, x, y, adv_value=1, testgen_factor=0.01, testgen_size=0
     if is_adv:
       failing.append(t)
       ## to find a passing
-      ite=testgen_factor
-      while ite>0.01:
-        ite=(ite+0)/2
-        #ite-=0.01
+      ite=h #testgen_factor
+      while ite>1: #ite>0.01:
         t2=x.copy()
-        L2=L0[0:int(ite/testgen_factor*portion)]
+        #ite=ite-1#ite//2 #ite=(ite+0)/2
+        ite=int(ite-incr)
+        if ite<1: break
+        region=L0[ np.max([i0-ite,0]) : np.min([i0+ite, sp[0]]), np.max([i1-ite,0]):np.min([i1+ite,sp[1]])].flatten()
+
+        L=region #L0[0:portion]
         if v_type==np.ndarray:
-          np.put(t2, L2, adv_value.take(L2))
+          np.put(t, L, adv_value.take(L))
         else:
-          np.put(t2, L2, adv_value)
-        new_y=np.argsort(model.predict(sbfl_preprocess(eobj, np.array([t2]))))[0][-eobj.top_classes:]
-        #print (y, new_y)
+          np.put(t, L, adv_value)
+        x_flag.flat[L]=True #np.put(x, L, True)
+        new_y=np.argsort(model.predict(sbfl_preprocess(eobj, np.array([t]))))[0][-eobj.top_classes:]
+        #is_adv=(len(np.intersect1d(y, new_y))==0)
+        #ite-=0.01
+        #L2=L0[0:int(ite/testgen_factor*portion)]
+        #if v_type==np.ndarray:
+        #  np.put(t2, L2, adv_value.take(L2))
+        #else:
+        #  np.put(t2, L2, adv_value)
+        #new_y=np.argsort(model.predict(sbfl_preprocess(eobj, np.array([t2]))))[0][-eobj.top_classes:]
+        ##print (y, new_y)
         if (len(np.intersect1d(y, new_y))!=0):
           passing.append(t2)
           break
@@ -48,20 +71,33 @@ def spectra_sym_gen(eobj, x, y, adv_value=1, testgen_factor=0.01, testgen_size=0
     else:
       passing.append(t)
       ## to find a failing
-      ite=testgen_factor
-      while ite<0.99:
+      ite=h #testgen_factor
+      while ite<sp[0]/2: #0.99:
         t2=x.copy()
-        ite=(ite+1)/2
-        #ite+=0.01
-        L2=L0[0:int(ite/testgen_factor*portion)]
+        #ite=ite+1#ite*2
+        ite=int(ite+incr)
+        if ite>sp[0]/2: break
+        region=L0[ np.max([i0-ite,0]) : np.min([i0+ite, sp[0]]), np.max([i1-ite,0]):np.min([i1+ite,sp[1]])].flatten()
+
+        L=region #L0[0:portion]
         if v_type==np.ndarray:
-          np.put(t2, L2, adv_value.take(L2))
+          np.put(t, L, adv_value.take(L))
         else:
-          np.put(t2, L2, adv_value)
-        new_y=np.argsort(model.predict(sbfl_preprocess(eobj, np.array([t2]))))[0][-eobj.top_classes:]
+          np.put(t, L, adv_value)
+        x_flag.flat[L]=True #np.put(x, L, True)
+        new_y=np.argsort(model.predict(sbfl_preprocess(eobj, np.array([t]))))[0][-eobj.top_classes:]
+        #t2=x.copy()
+        #ite=(ite+1)/2
+        ##ite+=0.01
+        #L2=L0[0:int(ite/testgen_factor*portion)]
+        #if v_type==np.ndarray:
+        #  np.put(t2, L2, adv_value.take(L2))
+        #else:
+        #  np.put(t2, L2, adv_value)
+        #new_y=np.argsort(model.predict(sbfl_preprocess(eobj, np.array([t2]))))[0][-eobj.top_classes:]
         if (len(np.intersect1d(y, new_y))==0):
           failing.append(t2)
-          x_flag.flat[L2]=True
+          x_flag.flat[L]=True
           break
 
   return np.array(passing), np.array(failing)

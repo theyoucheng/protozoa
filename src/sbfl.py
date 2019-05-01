@@ -45,11 +45,11 @@ def main():
                     help="upper bound on the adversarial percentage (0, 1]", metavar="FLOAT")
   parser.add_argument("--adversarial-lb", dest="adv_lb", default="0.",
                     help="lower bound on the adversarial percentage (0, 1]", metavar="FLOAT")
-  parser.add_argument("--adversarial-value", dest="adv_value", default="0",
+  parser.add_argument("--adversarial-value", dest="adv_value", default="234",
                     help="adversarial value", metavar="FLOAT")
-  parser.add_argument("--testgen-factor", dest="testgen_factor", default="0.5",
+  parser.add_argument("--testgen-factor", dest="testgen_factor", default="0.2",
                     help="test generation factor (0, 1]", metavar="FLOAT")
-  parser.add_argument("--testgen-size", dest="testgen_size", default="1000",
+  parser.add_argument("--testgen-size", dest="testgen_size", default="2000",
                     help="testgen size ", metavar="INT")
   parser.add_argument("--testgen-iterations", dest="testgen_iter", default="1",
                     help="to control the testgen iteration", metavar="INT")

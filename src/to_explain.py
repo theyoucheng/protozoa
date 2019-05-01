@@ -27,8 +27,9 @@ def to_explain(eobj):
       print ('#### spectra gen: iteration', ite)
       ite+=1
 
-      mask=find_mask(x)
-      eobj.adv_value=mask
+      #mask=find_mask(x)
+      #eobj.adv_value=mask
+      #eobj.adv_value=234
       passing, failing=spectra_sym_gen(eobj, x, y[-1:], adv_value=eobj.adv_value, testgen_factor=eobj.testgen_factor, testgen_size=eobj.testgen_size)
       spectra=[]
       num_advs=len(failing)
