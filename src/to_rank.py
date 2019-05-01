@@ -12,8 +12,8 @@ def to_rank(sbfl_element, metric='zoltar'):
   xs=np.array(sbfl_element.xs)
 
   diffs=np.abs(xs-origin_data)
-  diffs=diffs - (1+0.05 * origin_data)
-  diffs[diffs>0]=0
+  #diffs=diffs - (1+0.05 * origin_data)
+  #diffs[diffs>0]=0
 
   for i in range(0, len(diffs)):
     is_adv=(sbfl_element.y!=sbfl_element.ys[i])
