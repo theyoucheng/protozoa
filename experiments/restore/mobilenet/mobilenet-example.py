@@ -23,7 +23,10 @@ import json
 img_rows, img_cols, img_channels = 224, 224, 3
 
 xs=[]
-for path, subdirs, files in os.walk('/home/syc/Dropbox/github/sbte/new-experiments/ILSVRC2012_img_val'):
+imagenet='' ## location to ILSVRC2012_img_val data set, to download http://image-net.org/download
+if imagenet=='':
+  raise Exception('Please specify the location to ILSVRC2012_img_val data set; to download: http://image-net.org/download')
+for path, subdirs, files in os.walk(imagenet):
   for name in files:
     fname=(os.path.join(path, name))
     if fname.endswith('.jpg') or fname.endswith('.png') or fname.endswith('.JPEG'):
@@ -54,10 +57,10 @@ eobj.outputs='outs'
 eobj.top_classes=1 #5
 eobj.adv_ub=1 #.999
 eobj.adv_lb=0 #.001
-eobj.adv_value= np.mean(xs, axis=0) #255
+eobj.adv_value= 234 #np.mean(xs, axis=0) #255
 #save_an_image(np.mean(xs, axis=0), 'average')
-eobj.testgen_factor=0.5
-eobj.testgen_size=1000
+eobj.testgen_factor=0.2
+eobj.testgen_size=2000
 eobj.testgen_iter=1
 eobj.mobilenet=True
 #eobj.vgg16=args.vgg16
@@ -100,6 +103,7 @@ for idx in range(0, len(eobj.inputs)):
     print ('###### too many advs')
     continue
 
+  save_an_image(x, 'origin-{0}'.format(idx))
   for measure in ['zoltar', 'random', 'wong-ii', 'ochiai', 'tarantula']:
     eobj.measure=measure
 
