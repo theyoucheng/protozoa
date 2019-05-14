@@ -102,30 +102,17 @@ def top_plot(sbfl_element, ind, di, metric='', bg=128, online=False, online_mark
         save_an_image(im_o, '{1}-{0}'.format(int(count/base), metric), di)
     pos-=1
   #cc=0
-  #if not online:
-  #  for step in np.arange(len(ind)//100, len(ind), len(ind)//100):
-  #    zoltar_im=np.ones(sp)
-  #    zoltar_im=zoltar_im*bg #(255.*4/4) #125.5
-  #    for pos in range(len(ind)-step, len(ind)):
-  #      ipos=np.unravel_index(ind[pos], sp)
-  #      for k in range(0, sp[2]):
-  #        zoltar_im[ipos[0]][ipos[1]][k]=origin_data[ipos[0]][ipos[1]][k]
+  #for step in np.arange(len(ind)//100, len(ind), len(ind)//100):
+  #  zoltar_im=origin_data.copy()
+  #  if sp[2]==1:
+  #    zoltar_im=np.concatenate([zoltar_im, zoltar_im, zoltar_im], axis=2)
+  #    #print (zoltar_im.shape)
+  #  for pos in range(len(ind)-step, len(ind)):
+  #    ipos=np.unravel_index(ind[pos], sp)
+  #    for k in range(0, 3):
+  #      zoltar_im[ipos[0]][ipos[1]][k]=online_mark[k]
 
-  #    cc+=1
-  #    save_an_image(zoltar_im, '{1}-{0}'.format(cc, metric), di)
-  #    if cc>50: break
-  #else:
-  #  for step in np.arange(len(ind)//100, len(ind), len(ind)//100):
-  #    zoltar_im=origin_data.copy()
-  #    if sp[2]==1:
-  #      zoltar_im=np.concatenate([zoltar_im, zoltar_im, zoltar_im], axis=2)
-  #      #print (zoltar_im.shape)
-  #    for pos in range(len(ind)-step, len(ind)):
-  #      ipos=np.unravel_index(ind[pos], sp)
-  #      for k in range(0, 3):
-  #        zoltar_im[ipos[0]][ipos[1]][k]=online_mark[k]
-
-  #    cc+=1
-  #    save_an_image(zoltar_im, '{1}-{0}'.format(cc, metric), di)
-  #    if cc>50: break
+  #  cc+=1
+  #  save_an_image(zoltar_im, '{1}-{0}'.format(cc, metric), di)
+  #  if cc>50: break
 

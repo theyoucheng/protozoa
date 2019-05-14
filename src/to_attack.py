@@ -43,7 +43,7 @@ def to_attack(eobj, ind, origin_data, bg_v, init_step, step_incr):
 
     if count<init_step: continue ## to start from a partial image
 
-    #if count>5000: break
+    if count>5000: break
 
     if count-old_count>=step_incr:
       old_count=count
