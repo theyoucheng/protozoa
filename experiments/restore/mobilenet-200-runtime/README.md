@@ -3,8 +3,6 @@ To run the script:
 --------------------
               python3 mobilenet-example.py
 
-Line 27: to configue the correct directory. For example, 
-
 
 
 The format of output, for example, in 'ochiai.txt'
