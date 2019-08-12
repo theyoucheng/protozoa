@@ -14,3 +14,11 @@ Alternatively, you are able to use your own model, by giving it to ``--model MOD
 in which case you also need to tell Protozoa the input image format: the number of rows ``--input-rows INT`` and columns ``--input-cols INT``.
 
 By default, Protozoa generates 2,000 mutants per explanation, you can configure this number by e.g., ``--testgen-size 200`` for more efficient run.
+
+# Dependencies
+conda create --name protozoa
+source activate protozoa
+conda install keras
+conda install opencv
+conda install pillow
+
